@@ -56,7 +56,7 @@ span {
   border: none;
   border-radius: 5px;
   background-color: #f5987d;
-  margin-top: 10px;
+  margin-top: 15px;
   width: 15%;
   font-size: 1.2em;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -64,4 +64,51 @@ span {
 
 #newRecipeButton:hover {
   cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.95) 0px 5px 15px;
+}
+
+#inputDisplay {
+  display: none;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.85);
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  margin: auto;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  position: fixed;
+  z-index: 1;
+}
+
+#inputForm {
+  background-color: #f6f6f6;
+  margin: 15% auto 15% auto;
+  width: 22%;
+  border: solid #5fcfa2;
+}
+
+.input {
+  margin: 5px;
+}
+
+input {
+  width: 175px;
+  max-width: 85%;
+  text-align: center;
+}
+
+#submitRecipeButton {
+  border: none;
+  border-radius: 5px;
+  background-color: #f5987d;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+#submitRecipeButton:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.95) 0px 5px 15px;
 }

@@ -10,11 +10,22 @@ class App extends React.Component {
       notes: "" 
     }
     
-    
+  }
+  
+
+  displayFunction = () => {
+    document.getElementById("inputDisplay").style.display="block"
   }
   render() {
     let recipes = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"];
-  return (
+    
+    window.onclick = (event) => {
+      if (event.target == document.getElementById("inputDisplay")) {
+        document.getElementById("inputDisplay").style.display="none"
+      }
+    }
+    
+    return (
     <div id="wrapper">
     <h1 id="title">Quick and Easy Recipes Box</h1>
     <div id="recipeDisplay">  
@@ -25,10 +36,27 @@ class App extends React.Component {
       {recipes.map((i) => <li key={i}>{i}</li>)}
       </ul>
     </div>
+
+      <button id="newRecipeButton" onClick={() => this.displayFunction()}>New Recipe</button>
     
-      <button id="newRecipeButton">Add New Recipe</button>
-    
+      <div id="inputDisplay">
+      <form id="inputForm">
+        <label for="meal">Meal: 
+        <input class="input" type="text" placeholder="enter meal name" name="meal" required></input>
+        </label>
+        <label for="ingredients">Ingredients: 
+        <input class="input" type="text"  placeholder="enter ingredients" name="ingredients" required></input>
+        </label>
+        <label for="notes">Notes: 
+        <input class="input" type="text" placeholder="enter any notes (optional)" name="notes"></input>
+        </label>
+        <button id="submitRecipeButton" type="submit">Add Recipe</button>
+      </form>
     </div>
+
+    </div>
+
+    
   );
   }
 }
