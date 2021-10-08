@@ -112,3 +112,7 @@ input {
   cursor: pointer;
   box-shadow: rgba(0, 0, 0, 0.95) 0px 5px 15px;
 }
+
+.catalogRecipe:hover {
+  cursor: pointer;
+}

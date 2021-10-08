@@ -12,13 +12,37 @@ class App extends React.Component {
     
   }
   
+  showRecipe = (i) => {
+    this.setState({
+      meal: i.meal,
+      ingredients: i.ingredients,
+      notes: i.notes
+    })
+  }
 
-  displayFunction = () => {
+  displayNewRecipe = () => {
     document.getElementById("inputDisplay").style.display="block"
   }
   render() {
-    let recipes = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"];
+   // let recipes = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"];
     
+    let recipes = [
+      {
+        "meal": "ramen",
+        "ingredients": ["noodles"],
+        "notes": "it's good"
+      },
+      {
+        "meal": "udon",
+        "ingredients": ["also noodles"],
+        "notes": "it's also good"
+      },
+      {
+        "meal": "soba",
+        "ingredients": ["still noodles"],
+        "notes": "it's still good"
+      }
+    ] 
     window.onclick = (event) => {
       if (event.target == document.getElementById("inputDisplay")) {
         document.getElementById("inputDisplay").style.display="none"
@@ -33,11 +57,11 @@ class App extends React.Component {
     </div>
     <div id="catalog">
       <ul>
-      {recipes.map((i) => <li key={i}>{i}</li>)}
+      {recipes.map((i) => <li onClick={() => this.showRecipe(i)} className="catalogRecipe" key={i}>{i.meal}</li>)}
       </ul>
     </div>
 
-      <button id="newRecipeButton" onClick={() => this.displayFunction()}>New Recipe</button>
+      <button id="newRecipeButton" onClick={() => this.displayNewRecipe()}>New Recipe</button>
     
       <div id="inputDisplay">
       <form id="inputForm">
