@@ -6,46 +6,97 @@ class App extends React.Component {
     super(props);
     this.state = {
       meal: "",
-      ingredients: "select a meal to see the recipe!",
+      message: (localStorage.getItem("recipes")) ? "select a meal to see the recipe!" : "please add a recipe!",
+      ingredients: "",
       notes: "" 
     }
     
   }
+  recipes = (localStorage.getItem("recipes")) ? [...JSON.parse(localStorage.getItem("recipes"))] : [];
   
+  /*recipes = [
+    {
+      "meal": "ramen",
+      "ingredients": ["noodles"],
+      "notes": "it's good"
+    },
+    {
+      "meal": "udon",
+      "ingredients": ["also noodles"],
+      "notes": "it's also good"
+    },
+    {
+      "meal": "soba",
+      "ingredients": ["still noodles"],
+      "notes": "it's still good"
+    }
+  ]*/
+
+  addRecipe = (e) => {
+    //e.preventDefault()
+    
+    this.recipes = [...this.recipes, 
+    {
+      "meal": e.target[0].value,
+      "ingredients": [e.target[1].value],
+      "notes": e.target[2].value,
+      "message": ""
+    }]
+    //console.log(this.recipes)
+    localStorage.setItem("recipes", JSON.stringify(this.recipes))
+    //console.log(JSON.parse(localStorage.getItem("recipes")))
+  }
+
+  deleteRecipe = (meal) => {
+    let deleteCondition = (obj) => obj.meal === meal; 
+    let deleteTarget = this.recipes.findIndex(deleteCondition);
+    this.recipes.splice(deleteTarget, 1)
+    localStorage.setItem("recipes", JSON.stringify(this.recipes))
+    window.location.reload();
+  }
+
+  editRecipe = (e) => {
+    let editCondition = (obj) => obj.meal === e.target[0].value;
+    let editTarget = this.recipes.findIndex(editCondition);
+    let editedRecipe = {
+      "meal": e.target[0].value,
+      "ingredients": [e.target[1].value],
+      "notes": e.target[2].value
+    }
+    this.recipes.splice(editTarget, 1, editedRecipe)
+    localStorage.setItem("recipes", JSON.stringify(this.recipes))
+    window.location.reload();
+  }
+
   showRecipe = (i) => {
     this.setState({
       meal: i.meal,
       ingredients: i.ingredients,
-      notes: i.notes
+      notes: i.notes,
+      message: ""
     })
+  }
+
+  displayButtons = () => {
+    document.getElementById("delete").style.display="inline-block"
+    document.getElementById("edit").style.display="inline-block"
   }
 
   displayNewRecipe = () => {
     document.getElementById("inputDisplay").style.display="block"
   }
+
+  displayEditRecipe = () => {
+    document.getElementById("editDisplay").style.display="block"
+  }
+
   render() {
    // let recipes = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"];
-    
-    let recipes = [
-      {
-        "meal": "ramen",
-        "ingredients": ["noodles"],
-        "notes": "it's good"
-      },
-      {
-        "meal": "udon",
-        "ingredients": ["also noodles"],
-        "notes": "it's also good"
-      },
-      {
-        "meal": "soba",
-        "ingredients": ["still noodles"],
-        "notes": "it's still good"
-      }
-    ] 
+     
     window.onclick = (event) => {
-      if (event.target == document.getElementById("inputDisplay")) {
+      if (event.target === document.getElementById("inputDisplay") || event.target === document.getElementById("editDisplay")) {
         document.getElementById("inputDisplay").style.display="none"
+        document.getElementById("editDisplay").style.display="none"
       }
     }
     
@@ -53,30 +104,46 @@ class App extends React.Component {
     <div id="wrapper">
     <h1 id="title">Quick and Easy Recipes Box</h1>
     <div id="recipeDisplay">  
-    <Recipe meal={this.state.meal} ingredients={this.state.ingredients} notes={this.state.notes} />
+    <Recipe meal={this.state.meal} ingredients={this.state.ingredients} message={this.state.message} notes={this.state.notes} deleteRecipe={this.deleteRecipe} displayEditRecipe={this.displayEditRecipe} />
     </div>
     <div id="catalog">
       <ul>
-      {recipes.map((i) => <li onClick={() => this.showRecipe(i)} className="catalogRecipe" key={i}>{i.meal}</li>)}
+      {(localStorage.getItem("recipes")) ? JSON.parse(localStorage.getItem("recipes")).map((i) => <li onClick={() => {this.showRecipe(i); this.displayButtons()}} className="catalogRecipe" key={i.meal}>{i.meal}</li>) : ""}
       </ul>
     </div>
 
       <button id="newRecipeButton" onClick={() => this.displayNewRecipe()}>New Recipe</button>
     
       <div id="inputDisplay">
-      <form id="inputForm">
-        <label for="meal">Meal: 
-        <input class="input" type="text" placeholder="enter meal name" name="meal" required></input>
+      <form id="inputForm" onSubmit={(e) => this.addRecipe(e)}>
+        <label htmlFor="meal">Meal: 
+        <input className="input" type="text" placeholder="enter meal name" name="meal" required></input>
         </label>
-        <label for="ingredients">Ingredients: 
-        <input class="input" type="text"  placeholder="enter ingredients" name="ingredients" required></input>
+        <label htmlFor="ingredients">Ingredients: 
+        <input className="input" type="text"  placeholder="enter ingredients" name="ingredients" required></input>
         </label>
-        <label for="notes">Notes: 
-        <input class="input" type="text" placeholder="enter any notes (optional)" name="notes"></input>
+        <label htmlFor="notes">Notes: 
+        <input className="input" type="text" placeholder="enter any notes (optional)" name="notes"></input>
         </label>
         <button id="submitRecipeButton" type="submit">Add Recipe</button>
       </form>
     </div>
+
+    <div id="editDisplay">
+      <form id="editForm" onSubmit={(e) => this.editRecipe(e)}>
+        <label htmlFor="meal">Meal: 
+        <input className="input" type="text" value={this.state.meal} name="meal" required readOnly></input>
+        </label>
+        <label htmlFor="ingredients">Ingredients: 
+        <input className="input" type="text" name="ingredients" required></input>
+        </label>
+        <label htmlFor="notes">Notes: 
+        <input className="input" type="text" name="notes"></input>
+        </label>
+        <button id="submitRecipeButton" type="submit">Edit Recipe</button>
+      </form>
+    </div>
+     
 
     </div>
 
@@ -87,11 +154,14 @@ class App extends React.Component {
 
 class Recipe extends React.Component {
   render () {
-    const { meal, ingredients, notes} = this.props;
+    const { meal, ingredients, notes, message } = this.props;
     return (
       <div className="tile">
        <div className="tileTop"><h2>{meal}</h2></div>
-       <div className="content"><p>{ingredients}</p><span>{notes}</span></div> 
+       <div className="content"><p>{ingredients}{message}</p><span>{notes}</span></div>
+      <div id="deleteEdit">
+      <button id="edit" onClick={() => this.props.displayEditRecipe(meal)}>Edit Recipe</button><button onClick={() => this.props.deleteRecipe(meal)} id="delete">Delete Recipe</button>
+      </div>
       </div>
     )
   }
