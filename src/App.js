@@ -13,27 +13,8 @@ class App extends React.Component {
     
   }
   recipes = (localStorage.getItem("recipes")) ? [...JSON.parse(localStorage.getItem("recipes"))] : [];
-  
-  /*recipes = [
-    {
-      "meal": "ramen",
-      "ingredients": ["noodles"],
-      "notes": "it's good"
-    },
-    {
-      "meal": "udon",
-      "ingredients": ["also noodles"],
-      "notes": "it's also good"
-    },
-    {
-      "meal": "soba",
-      "ingredients": ["still noodles"],
-      "notes": "it's still good"
-    }
-  ]*/
 
   addRecipe = (e) => {
-    //e.preventDefault()
     
     this.recipes = [...this.recipes, 
     {
@@ -42,9 +23,8 @@ class App extends React.Component {
       "notes": e.target[2].value,
       "message": ""
     }]
-    //console.log(this.recipes)
+    
     localStorage.setItem("recipes", JSON.stringify(this.recipes))
-    //console.log(JSON.parse(localStorage.getItem("recipes")))
   }
 
   deleteRecipe = (meal) => {
@@ -91,7 +71,6 @@ class App extends React.Component {
   }
 
   render() {
-   // let recipes = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9"];
      
     window.onclick = (event) => {
       if (event.target === document.getElementById("inputDisplay") || event.target === document.getElementById("editDisplay")) {
